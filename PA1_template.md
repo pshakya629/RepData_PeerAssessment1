@@ -1,21 +1,32 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Prabin Shakya"
-output: 
-
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+Prabin Shakya  
 
 
 
 
 ***************************************************
 
-```{r echo = TRUE}
+
+```r
 # Include
 library(dplyr)
+```
 
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
 ```
 
 
@@ -25,23 +36,30 @@ library(dplyr)
 #### 1. Load the data (i.e. read.csv())
 
 
-```{r echo = TRUE}
 
+```r
 data<-read.csv("activity.csv")
-
-
 ```
 
 
 #### 2. Process/transform the data (if necessary) into a format suitable for your analysis
 
 
-```{r echo = TRUE}
 
+```r
 data$date<-as.Date(data$date)
 
 head(data)
+```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
 ```
 
 ***************************************************
@@ -55,8 +73,8 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 Answer: Below is the histogram of the total number of steps taken each day.
 
-```{r echo = TRUE}
 
+```r
 dataAgr_Day_Total <- aggregate(data$steps
                      ,by=list(date = data$date)
                      ,sum,na.rm=TRUE)
@@ -65,8 +83,9 @@ hist(dataAgr_Day_Total$x,col = "Red"
      ,xlab = "Total # of steps taken each day"
      ,main = "Total Steps on a Day"
      )
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 
 ***************************************************
@@ -75,15 +94,14 @@ hist(dataAgr_Day_Total$x,col = "Red"
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 dataAvg_mean<-as.integer(mean(dataAgr_Day_Total$x))
 dataAvg_median<-as.integer(median(dataAgr_Day_Total$x))
-
 ```
 
 
-Mean and median of the total number of steps taken per day is `r dataAvg_mean` and `r dataAvg_median` respectively.
+Mean and median of the total number of steps taken per day is 9354 and 10395 respectively.
 
 ***************************************************
 
@@ -96,7 +114,8 @@ Mean and median of the total number of steps taken per day is `r dataAvg_mean` a
 
 Answer:
 
-```{r echo=TRUE}
+
+```r
 dataAgr_Day_Mean <- aggregate(data$steps
                      ,by=list(interval = data$interval)
                      ,mean,na.rm=TRUE)
@@ -107,21 +126,20 @@ plot(dataAgr_Day_Mean$interval
      ,xlab = "5-minute interval"
      ,ylab = "Avg # of steps taken"
      )
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 #### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 Answer:
 
-```{r echo = TRUE}
+
+```r
 dataAvg_max <- max(dataAgr_Day_Mean$x)
 maxRecord <- dataAgr_Day_Mean[dataAgr_Day_Mean$x == dataAvg_max,]
- 
-
 ```
-The maximum number of steps of `r maxRecord$x` occurs in the interval of `r maxRecord$interval`
+The maximum number of steps of 206.1698113 occurs in the interval of 835
 
 
 ***************************************************
@@ -135,12 +153,12 @@ The presence of missing days may introduce bias into some calculations or summar
 
 Answer:
 
-```{r echo = TRUE}
-totalNAs <- nrow(data[data$steps == "NA",])
 
+```r
+totalNAs <- nrow(data[data$steps == "NA",])
 ```
 
-There are `r totalNAs` number rows with NAs in this data.
+There are 2304 number rows with NAs in this data.
 
 
 #### 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need
@@ -149,8 +167,8 @@ There are `r totalNAs` number rows with NAs in this data.
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 #This function will return a default of 10 steps if the value is blank.
 
 checkValue<-function(steps){
@@ -163,16 +181,14 @@ checkValue<-function(steps){
   return (steps)  
   
 }
-
-
 ```
 
 #### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 # Copy of original data set
 dataRevised<- data
 
@@ -180,8 +196,6 @@ dataRevised<- data
 for(i in 1:nrow(dataRevised)){
   dataRevised[i,"steps"]<-checkValue(dataRevised[i,"steps"])
 }
-
-
 ```
 
 #### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean 
@@ -191,8 +205,8 @@ for(i in 1:nrow(dataRevised)){
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 dataRevisedAgr_Day_Total <- aggregate(dataRevised$steps
                      ,by=list(date = data$date)
                      ,sum,na.rm=TRUE)
@@ -201,13 +215,16 @@ hist(dataRevisedAgr_Day_Total$x
      ,col = "Red"
      ,xlab = "Total # of steps taken each day"
      ,main = "Total Steps on a Day")
-
-meanRevised<-as.integer(mean(dataRevisedAgr_Day_Total$x))
-medianRevised<-as.integer(median(dataRevisedAgr_Day_Total$x))
-
 ```
 
-Revised Mean and median of the total number of steps taken per day is `r meanRevised` and `r medianRevised` respectively. 
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
+```r
+meanRevised<-as.integer(mean(dataRevisedAgr_Day_Total$x))
+medianRevised<-as.integer(median(dataRevisedAgr_Day_Total$x))
+```
+
+Revised Mean and median of the total number of steps taken per day is 9731 and 10395 respectively. 
 
 Impact:
 - Mean has shifted
@@ -227,13 +244,12 @@ Use the dataset with the filled-in missing values for this part.
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 # add fields day and dayType to the revised data set
 dataRevised <- mutate(dataRevised,day = weekdays(dataRevised$date)) 
 dataRevised <- mutate(dataRevised
                 ,dayType = ifelse(dataRevised$day %in% c("Saturday","Sunday"), "Weekend", "Weekday")) 
-
 ```
 
 
@@ -243,8 +259,8 @@ dataRevised <- mutate(dataRevised
 
 Answer:
 
-```{r echo = TRUE}
 
+```r
 dataRevised_Weekday <- dataRevised[dataRevised$dayType == "Weekday",]
 
 dataRevised_Weekend <- dataRevised[dataRevised$dayType == "Weekend",]
@@ -272,8 +288,8 @@ plot(dataRevised_Weekend_Agr$interval
      ,type = "l"
      ,xlab = "5-minute interval"
      ,ylab = "Avg # of steps (Weekend)")
-
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ***************************************************
